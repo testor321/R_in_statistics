@@ -1,0 +1,6 @@
+Москва: http://data.mos.ru
+Россия: http://data.gov.ru
+США: http://data.gov
+Великобритания: http://data.gov.uk
+хаб открытых данных: ﻿http://datahub.io﻿
+открытые бюджеты: http://openspending.org
