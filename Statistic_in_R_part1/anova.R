@@ -52,7 +52,7 @@ DV ~ IV1 + Error(subject/IV1) # repeated measures
 # -- DV ~ IV1:IV2 + Error(subject/(IV1:IV2))
 
 # здесь немного про формулы с примерами: http://science.nature.nps.gov/im/datamgmt/statistics/r/formulas/
-# Вот такой шпаргалки не хватает, может только чуть больше примеров: http://gyazo.com/12f1ee99eeea5ec53c0b1e7dabe7de42�
+# Вот такой шпаргалки не хватает, может только чуть больше примеров: http://gyazo.com/12f1ee99eeea5ec53c0b1e7dabe7de42�
 # ?formula
 # https://www.statmethods.net/stats/anova.html
 
@@ -129,6 +129,8 @@ summary(npk_yield)
 npk_yield_3x <- aov(yield ~ N + P +K, data=npk)
 summary(npk_yield_3x)
 
+
+
 # Pairwise comparisons
 
 ggplot(mydata, aes(x = food, y = price)) + 
@@ -137,17 +139,36 @@ ggplot(mydata, aes(x = food, y = price)) +
 fit5 <- aov(price ~ food, data=mydata)
 summary(fit5)
 
+?TukeyHSD
+# Compute Tukey Honest Significant Differences
+# Create a set of confidence intervals on the differences between the means of the levels
+# of a factor with the specified family-wise probability of coverage. 
+# The intervals are based on the Studentized range statistic, Tukey's ‘Honest Significant Difference’ method
 
 TukeyHSD(fit5)
 
 
+# Проведите однофакторный дисперсионный анализ на встроенных данных iris. 
+# Зависимая переменная - ширина чашелистика (Sepal.Width), 
+# независимая переменная - вид (Species). Затем проведите попарные сравнения видов. 
+# Какие виды статистически значимо различаются по ширине чашелистика (p < 0.05)?
+
+View(iris)
+fit6 <- aov(Sepal.Width ~ Species, data=iris)
+summary(fit6)
+
+TukeyHSD(fit6)
+
+# virginica и versicolor
+# virginica и setosa
+# versicolor и setosa
 
 
 # Repeated measures
 
 mydata2 <- read.csv('therapy_data.csv')
 str(mydata2)
-
+View(mydata2)
 mydata2$subject <- as.factor(mydata2$subject)
 
 
@@ -176,3 +197,39 @@ summary(fit3)
 fit3b <- aov(well_being ~ therapy*price*sex + Error(subject/(therapy*price)), data = mydata2)
 summary(fit3b)
 
+
+# В этой задаче вам дан набор данных, в котором представлена информация о температуре нескольких пациентов, 
+# которые лечатся разными таблетками и у разных врачей.
+# Проведите однофакторный дисперсионный анализ с повторными измерениями: влияние типа таблетки (pill) 
+# на температуру (temperature) с учётом испытуемого (patient). Каково p-value для влияния типа таблеток на температуру?
+# 
+# Данные: https://stepic.org/media/attachments/lesson/11505/Pillulkin.csv
+# 
+# Не забудьте, важно перевести переменную patient в фактор!  
+
+df <- read.csv(url('https://stepic.org/media/attachments/lesson/11505/Pillulkin.csv'))
+df$patient <- as.factor(df$patient)
+summary(aov(temperature ~ pill + Error(patient/pill), data = df))
+
+# Теперь вашей задачей будет провести двухфакторный дисперсионный анализ с повторными измерениями: 
+# влияние факторов doctor, влияние фактора pill и их взаимодействие на temperature. 
+# Учтите обе внутригрупповые переменные: и тот факт, что один и тот же больной принимает разные таблетки, 
+# и тот факт, что  один и тот же больной лечится у разных врачей! Каково F-значение для взаимодействия 
+# факторов доктора (doctor) и типа таблеток (pill)?
+# Данные: https://stepic.org/media/attachments/lesson/11505/Pillulkin.csv
+
+df <- read.csv(url('https://stepic.org/media/attachments/lesson/11505/Pillulkin.csv'))
+df$patient <- as.factor(df$patient)
+summary(aov(temperature ~ pill*doctor + Error(patient/(pill*doctor)), data = df))
+
+# Вспомните графики из лекций и дополните шаблон графика в поле для ответа так (не добавляя еще один geom) ,
+# чтобы объединить линиями точки, принадлежащие разным уровням фактора supp.
+# Не забудьте подключить нужный для построение графика пакет.
+# Пожалуйста, сохраните график в переменную obj.
+
+library(ggplot2)
+View(ToothGrowth)
+obj <- ggplot(ToothGrowth, aes(x = as.factor(dose), y = len, col = supp, group = supp))+
+  stat_summary(fun.data = mean_cl_boot, geom = 'errorbar', width = 0.1, position = position_dodge(0.2))+
+  stat_summary(fun.data = mean_cl_boot, geom = 'point', size = 3, position = position_dodge(0.2))+
+  stat_summary(fun.data = mean_cl_boot, geom = 'line', position = position_dodge(0.2))
