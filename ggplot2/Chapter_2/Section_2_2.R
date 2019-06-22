@@ -21,7 +21,7 @@ library(ggplot2)
 # stat, position : DEPRECATED
 
 # ------------------------------- Рисунок 2.1 ----------------------------------
-# 
+#
 qplot(x = Length, y = Infection, data = dreissena)
 
 # ------------------------------- Рисунок 2.2 ----------------------------------
@@ -29,6 +29,7 @@ qplot(x = log(Length),
       y = log(Infection + 1), data = dreissena)
 # поскольку некоторые значения Infection равны 0,
 # логарифмирование выполнено для (Infection + 1)
+#
 
 # ------------------------------- Рисунок 2.3 ----------------------------------
 qplot(log(Length), log(Infection + 1), data = dreissena, colour = Month)
